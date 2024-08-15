@@ -206,7 +206,7 @@ dialog[open] {
 		}
 	}
 
-	#progress {
+	&#progress {
 		display: block;
 		padding: 1em;
 		text-align: center;
