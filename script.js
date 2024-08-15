@@ -20,8 +20,8 @@ class GuessColors {
 		let remaining = [];
 		for (let c in segmentCounts) {
 			if (segmentCounts[c] > 0) {
-				if (segmentCounts[c] < segments) {
-					for (let x = segments - segmentCounts[c]; x > 0; x--){
+				if (segmentCounts[c] < this.segments) {
+					for (let x = this.segments - segmentCounts[c]; x > 0; x--){
 						remaining.push(c);
 					}
 				}
