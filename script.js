@@ -100,8 +100,7 @@ class GuessColors {
 						continue;
 					}
 
-					$('#progress #solX').innerHTML = parseInt(guess) + 1;
-					$('#progress progress').setAttribute('value', this.guesses.length - guess);
+					updateProgress(parseInt(guess) + 1, this.guesses.length - guess);
 
 					let attempt = this.attempt(guess);
 					if (attempt.length > 0) {
@@ -147,6 +146,11 @@ class GuessColors {
 	deepCopy(input) {
 		return JSON.parse(JSON.stringify(input));
 	}
+}
+
+async function updateProgress(guess, progress) {
+	$('#progress #solX').innerHTML = guess;
+	$('#progress progress').setAttribute('value', progress);
 }
 
 function createVial(segments, empty) {
@@ -235,7 +239,7 @@ function permutation(n, r) {
 let puzzle, solution, lastStep;
 async function s3() {
 	saveProgress();
-	if (solvePuzzle() == true) {
+	if (fullVials() && solvePuzzle() == true) {
 		// ALL VIALS ARE FILLED AND A SOLUTION WAS FOUND
 		toPage('s3');
 		return true; 
@@ -296,7 +300,7 @@ function renderVial(key) {
 	key.split('').reverse().forEach( s => {
 		let segment = document.createElement('div');
 		segment.classList.add('segment');
-		segment.setAttribute('data-node', s);
+		segment.setAttribute('data-node', (s != ' ') ? s : '');
 		vial.append(segment);
 	});
 	return vial;
@@ -417,6 +421,7 @@ function toPage(page) {
 	$('#'+ page).scrollIntoView({
 		behavior: 'smooth'
 	});
+	document.body.className = page;
 }
 
 function setHTMLStrings() {
@@ -555,7 +560,6 @@ function saveProgress() {
 		"colors": readVials()
 	};
 	store.set('progress', JSON.stringify(progress));
-	console.log(progress);
 }
 
 async function restoreProgress() {
@@ -575,6 +579,7 @@ async function restoreProgress() {
 			}
 			$('#colors').append(vial);
 		});
+		updateAllBlockCounts();
 		toPage('s2');
 	}
 }
